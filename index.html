@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" m>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -52,6 +52,64 @@
       main{height:auto}
       .card{page-break-inside:avoid}
     }
+    /* === Responsive Adjustments === */
+
+/* On tablets and smaller (<= 1024px) — adjust layout proportions */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 280px 1fr;
+    gap: 12px;
+  }
+  aside {
+    height: 70vh;
+  }
+  main {
+    height: 70vh;
+  }
+}
+
+/* On phones and small screens (<= 767px) — stack sidebar and content vertically */
+@media (max-width: 767px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+  }
+  aside {
+    width: 100%;
+    height: auto;
+    margin-bottom: 12px;
+    max-height: 40vh;
+  }
+  main {
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+  }
+  header, .toolbar {
+    padding: 20px 12px;
+  }
+  .container {
+    padding: 0 12px;
+  }
+}
+
+/* On very narrow phones (<= 480px) — make buttons and text more tap-friendly */
+@media (max-width: 480px) {
+  .btn {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+  .search {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+  .pill {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}
+
   </style>
 </head>
 <body>
