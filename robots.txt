@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://terracodes004.github.io/learn-js/sitemap.xml
