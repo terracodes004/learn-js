@@ -1,0 +1,455 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JavaScript Mastery for Young Minds — Full Tutorial</title>
+  <style>
+    :root{--bg:#0f1724;--panel:#0c1424;--card:#0b1220;--ink:#e6eef8;--muted:#9fb1c9;--accent:#60a5fa;--good:#34d399;--warn:#fbbf24;--bad:#fb7185;--glass:rgba(255,255,255,0.06)}
+    *{box-sizing:border-box}
+    body{font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Arial; margin:0; background:linear-gradient(180deg,#071029 0%, #0b1220 100%); color:var(--ink)}
+    header{padding:28px 20px;border-bottom:1px solid rgba(255,255,255,0.06)}
+    .container{max-width:1200px;margin:0 auto;padding:0 16px}
+    h1{font-size:28px;margin:0 0 6px}
+    p.lead{color:var(--muted);margin:0}
+    .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .btn{background:transparent;border:1px solid var(--glass);padding:8px 12px;border-radius:10px;color:var(--accent);cursor:pointer}
+    .btn:hover{background:var(--glass)}
+
+    .layout{display:grid;grid-template-columns:340px 1fr;gap:18px;padding:18px}
+    aside{background:var(--panel);border:1px solid var(--glass);border-radius:14px;padding:12px;height:78vh;overflow:auto}
+    main{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));border:1px solid var(--glass);border-radius:14px;padding:18px;height:78vh;overflow:auto}
+
+    .chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border:1px solid var(--glass);border-radius:999px;color:var(--muted);cursor:pointer}
+    .chip.active{color:var(--ink);background:rgba(96,165,250,0.12);border-color:rgba(96,165,250,0.35)}
+
+    .search{width:100%;padding:10px;border-radius:10px;border:1px solid var(--glass);background:transparent;color:inherit;margin-bottom:10px}
+    .chapters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+    .list{list-style:none;margin:0;padding:0}
+    .list li{padding:8px;border-radius:10px;cursor:pointer;color:var(--muted)}
+    .list li:hover{background:rgba(255,255,255,0.04);color:var(--ink)}
+    .list li.active{background:rgba(96,165,250,0.12);color:var(--ink)}
+
+    .lesson h2{margin:0}
+    .prof{font-style:italic;color:#c7e0ff;margin-top:4px}
+    .pill{font-size:12px;padding:4px 8px;border:1px solid var(--glass);border-radius:999px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr;gap:12px}
+    .card{background:var(--card);border:1px solid var(--glass);border-radius:14px;padding:12px}
+    pre, code{font-family:ui-monospace,SFMono-Regular,Consolas,Monaco,monospace}
+    pre{margin:0;background:rgba(0,0,0,0.35);padding:12px;border-radius:10px;overflow:auto}
+    .tasks li{margin:6px 0}
+    .ok{color:var(--good)} .warn{color:var(--warn)} .bad{color:var(--bad)}
+
+    .nav{display:flex;gap:10px;justify-content:space-between}
+    .nav .btn{flex:1}
+
+    footer{padding:16px;color:var(--muted);text-align:center}
+
+    /* Print/PDF */
+    @media print{
+      body{background:white;color:black}
+      header, aside, .toolbar{display:none}
+      main{height:auto}
+      .card{page-break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>JavaScript Mastery for Young Minds — Full Tutorial</h1>
+      <p class="lead">A professor’s 75 years of wisdom, explained kindly for a 13‑year‑old. Follow the guided path or jump to any topic.</p>
+      <div class="toolbar">
+        <button class="btn" id="startPath">▶ Start Guided Path</button>
+        <button class="btn" id="printPdf">🖨️ Print / Save as PDF</button>
+        <button class="btn" id="downloadHtml">⬇️ Download .html</button>
+        <span class="pill" id="progressPill">Progress: 0 / 250</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container layout">
+    <aside>
+      <input id="search" class="search" placeholder="Search topics (press Enter)…" />
+      <div class="chapters">
+        <span class="chip active" data-chapter="Beginner">Beginner</span>
+        <span class="chip" data-chapter="Intermediate">Intermediate</span>
+        <span class="chip" data-chapter="Advanced">Advanced</span>
+      </div>
+      <ol id="topicList" class="list"></ol>
+    </aside>
+
+    <main>
+      <article class="lesson">
+        <h2 id="lessonHeading">Welcome, young learner</h2>
+        <div class="prof">Professor — patient, curious, and practical.</div>
+        <div class="grid" id="lessonGrid">
+          <section class="card">
+            <h3>How this tutorial works</h3>
+            <p>Each lesson has five parts: <b>Concept</b> → <b>Step‑by‑step</b> → <b>Example</b> → <b>Practice</b> → <b>Quick quiz</b>. Finish a lesson and mark it as done to track progress.</p>
+            <ul>
+              <li>Use the left panel to filter by <b>Beginner / Intermediate / Advanced</b>.</li>
+              <li>Click <b>Start Guided Path</b> to follow a smart order with milestone mini‑projects.</li>
+              <li>Click <b>Print / Save as PDF</b> to get a printable version.</li>
+            </ul>
+          </section>
+        </div>
+        <div class="nav">
+          <button class="btn" id="prev">⬅️ Previous</button>
+          <button class="btn" id="markDone">✅ Mark as Done</button>
+          <button class="btn" id="next">Next ➡️</button>
+        </div>
+      </article>
+    </main>
+  </div>
+
+  <footer>
+    <small>This is a self‑contained tutorial. No frameworks. You can study offline — just save the page.</small>
+  </footer>
+
+  <script>
+    // ===== Data: Topics grouped by chapter =====
+    const Beginner = [
+      "Introduction to JavaScript","Setting up JavaScript in HTML (<script> tag)","Inline, internal, and external scripts","JavaScript syntax rules","Variables (var, let, const)","Data types (string, number, boolean, null, undefined, symbol, bigint)","String basics","Number basics","Boolean basics","Null and undefined differences","typeof operator","Basic arithmetic operators (+, -, *, /, %)","Assignment operators (+=, -=, *=, /=, %)","Increment and decrement (++, --)","Comparison operators (==, ===, !=, !==, >, <, >=, <=)","Logical operators (&&, ||, !)","Template literals (backticks)","String concatenation","String length property","Accessing string characters (charAt, [])","String methods (toUpperCase, toLowerCase)","Number methods (toFixed, toString)","Math object basics (Math.random, Math.floor)","Comments (single-line, multi-line)","Alert, prompt, confirm","console.log basics","console.error and console.warn","console.table","Conditional statements (if, else if, else)","switch statement","for loop basics","while loop basics","do...while loop basics","Loop control: break, continue","Arrays introduction","Accessing array elements","Array length property","Adding elements to an array (push, unshift)","Removing elements (pop, shift)","Array indexing and updating values","Array iteration with for loop","Array for...of loop","Array forEach method","Objects introduction","Creating and accessing object properties","Updating object properties","Deleting object properties (delete)","Object.keys","Object.values","Nested objects","Functions introduction (function keyword)","Function parameters & arguments","Function return values","Default parameters","Arrow functions basics","Scope: global vs local","Block scope with let and const","Hoisting basics","typeof null quirk","Type conversion (Number, String, Boolean)"
+    ];
+
+    const Intermediate = [
+      "Strict mode ('use strict')","Equality pitfalls (== vs ===)","nullish coalescing (??)","Optional chaining (?.)","Ternary operator (condition ? a : b)","Short-circuit evaluation","Array map method","Array filter method","Array reduce method","Array some and every methods","Array find and findIndex","Array indexOf and includes","Array sort basics","Array reverse","String split and join","String slice, substring, substr","trim and trimStart / trimEnd","replace and replaceAll","startsWith and endsWith","Spread operator (...) with arrays","Rest parameters (...args)","Destructuring arrays","Destructuring objects","Swapping variables with destructuring","Copying arrays and objects (shallow copy)","Object.assign","Merging arrays and objects","Date object basics","Getting current date/time","Formatting dates with toLocaleString","DOM introduction","document.getElementById","document.querySelector","document.querySelectorAll","Changing element text (textContent, innerText)","Changing HTML (innerHTML)","Changing attributes (setAttribute, getAttribute)","Changing styles (style.property)","Adding/removing classes (classList)","Creating elements (document.createElement)","Appending elements (appendChild, append)","Removing elements (removeChild, remove)","Event listeners (addEventListener)","Mouse events (click, dblclick, mouseover, mouseout)","Keyboard events (keydown, keyup)","Form events (submit, change, input)","Event object properties (target, type)","Event delegation","Preventing default behavior (preventDefault)","Stopping event propagation (stopPropagation)","Window object basics","Window size detection (innerWidth, innerHeight)","window.alert, window.confirm, window.prompt","setTimeout basics","setInterval basics","Clearing timeouts and intervals","Random number generation","Simple animations with setInterval","CSS transitions triggered by JS","Detecting scroll position","Smooth scrolling with JS","localStorage basics","sessionStorage basics","Storing arrays/objects in storage (JSON.stringify)","Retrieving and parsing data (JSON.parse)","Removing items from storage","Clearing storage","JSON basics","Parsing JSON strings","Stringifying objects","Error handling with try...catch","Throwing errors (throw)","finally block","isNaN and Number.isNaN","Finite checks (isFinite)","Parsing numbers (parseInt, parseFloat)","Floating point precision issues","Rounding numbers (Math.round, Math.ceil, Math.floor)","Math.max and Math.min","Math.pow and **","Random color generator","Countdown timer","Digital clock with Date","Basic stopwatch","Simple calculator","Light/dark mode toggle","Show/hide password toggle","Image slider","Tabbed navigation","Accordion menu"
+    ];
+
+    const Advanced = [
+      "Closures basics","Practical closure examples","IIFE (Immediately Invoked Function Expressions)","Higher-order functions","Callback functions","Pure functions","Function composition","Recursion basics","Recursive factorial example","Recursive Fibonacci example","this keyword in functions","this in arrow functions","this in event handlers","Implicit, explicit, default, and constructor binding",".call, .apply, .bind","Constructor functions","new keyword","Prototypes basics","Prototypal inheritance","ES6 class syntax","constructor method","Class inheritance (extends)","Method overriding","super keyword","Static methods","Getters and setters","Private class fields (#field)","Symbols basics","Iterators","Generators (function*)","yield keyword","Promises basics","then and catch","finally with promises","Promise.all","Promise.race","Async functions (async / await)","Error handling in async functions","Fetch API basics (fetch)","GET requests with fetch","POST requests with fetch","Handling fetch errors","AbortController with fetch","File API basics (File, FileReader)","Reading files as text","Reading files as data URL","Drag-and-drop file upload","Blob basics","Creating object URLs (URL.createObjectURL)","Canvas API basics (<canvas>)","Drawing shapes on canvas","Drawing images on canvas","Canvas text drawing","Animations with requestAnimationFrame","Saving canvas as image","Audio API basics","Playing audio with JS","Video control with JS","Geolocation API basics","Getting current position","Watching position changes","Notifications API basics","Requesting notification permission","Showing notifications","Clipboard API basics","Copying text to clipboard","Reading from clipboard","Fullscreen API basics","Requesting fullscreen","Exiting fullscreen","Screen Orientation API","Detecting device orientation changes","Web Storage quota checking","Performance API basics","Measuring code execution time","History API basics","Navigating history (back, forward)","pushState and replaceState","Web Workers basics","Sending messages to worker","Receiving messages from worker","Terminating worker","Service Workers basics","Caching assets with Service Worker","Intercepting fetch requests","WebSockets basics","Sending messages over WebSocket","Receiving WebSocket messages","Closing WebSocket connection","MutationObserver basics","Observing DOM changes","IntersectionObserver basics","Detecting element visibility","ResizeObserver basics","Detecting element size changes","Custom events (CustomEvent)","Dispatching custom events","Listening for custom events","Creating your own iterable object","Deep cloning objects (structuredClone, manual recursion)"
+    ];
+
+    const ALL = [...Beginner, ...Intermediate, ...Advanced];
+
+    // ===== Sidebar population & filtering =====
+    const topicList = document.getElementById('topicList');
+    const chips = Array.from(document.querySelectorAll('.chip'));
+    const search = document.getElementById('search');
+    let activeChapter = 'Beginner';
+
+    function visibleTopics(){
+      if(activeChapter==='Beginner') return Beginner; if(activeChapter==='Intermediate') return Intermediate; return Advanced;
+    }
+
+    function renderList(){
+      topicList.innerHTML = '';
+      visibleTopics().forEach((t,i)=>{
+        const li = document.createElement('li');
+        const globalIndex = ALL.indexOf(t);
+        li.textContent = `${globalIndex+1}. ${t}`;
+        li.dataset.index = globalIndex;
+        if(done.has(globalIndex)) li.classList.add('active');
+        li.onclick = ()=> openLesson(globalIndex);
+        topicList.appendChild(li);
+      });
+    }
+
+    chips.forEach(ch=>{
+      ch.onclick = ()=>{
+        chips.forEach(c=>c.classList.remove('active')); ch.classList.add('active');
+        activeChapter = ch.dataset.chapter; renderList();
+      };
+    });
+
+    search.addEventListener('keypress', (e)=>{
+      if(e.key==='Enter'){
+        const q = search.value.toLowerCase().trim(); if(!q) return;
+        const idx = ALL.findIndex(t=>t.toLowerCase().includes(q));
+        if(idx>=0){ openLesson(idx); const li = [...topicList.children].find(li=>+li.dataset.index===idx); li?.scrollIntoView({behavior:'smooth',block:'center'}); }
+        else alert('No topic matched that search.');
+      }
+    });
+
+    // ===== Lesson generator =====
+    const lessonHeading = document.getElementById('lessonHeading');
+    const lessonGrid = document.getElementById('lessonGrid');
+
+    // Hand-crafted deep lessons for key topics (anchor points)
+    const deep = {
+      "Variables (var, let, const)": {
+        concept: "Variables are named boxes that store values so your code can remember things.",
+        steps: [
+          "Create with let/const. Use const when the reference won’t change.",
+          "Names use letters, numbers, $, _. They can’t start with a number.",
+          "Read the value by using the name; change with = (assignment)."
+        ],
+        example: `let score = 0;
+const appName = 'Space Game';
+score = score + 10;
+console.log(appName, score); // Space Game 10`,
+        practice: [
+          "Make two variables: firstName and age. Log: 'I am <name> and I am <age>'.",
+          "Try changing a const — what error do you see?"
+        ],
+        quiz: [
+          {q:"Which keyword best for a value that changes?", a:["var","let","const"], correct:1},
+          {q:"What happens if you reassign a const?", a:["Nothing","It resets to null","An error"], correct:2}
+        ],
+        mistakes:["Using var (function-scoped) when let/const would be clearer","Reassigning constants"]
+      },
+      "Arrays introduction":{
+        concept:"Arrays hold ordered lists like a queue of tasks.",
+        steps:["Create with []","Access by index starting at 0","Use push/pop to add/remove at the end"],
+        example:`const tasks=['eat','code'];
+tasks.push('sleep');
+console.log(tasks[1]); // code`,
+        practice:["Make an array of 3 games. Add one. Remove the last."],
+        quiz:[{q:"First index of an array?",a:["0","1","-1"],correct:0}],
+        mistakes:["Forgetting index starts at 0","Accessing out-of-range indexes (undefined)"]
+      },
+      "Functions introduction (function keyword)":{
+        concept:"Functions are reusable recipes. Give them inputs (parameters) and get outputs (return).",
+        steps:["Declare with function name(params)","Use return to send a value back","Call the function by its name"],
+        example:`function add(a,b){ return a+b }
+console.log(add(2,3)); // 5`,
+        practice:["Write greet(name) → 'Hello, name!'"],
+        quiz:[{q:"Where do parameters go?",a:["Inside ()","After {}","Before function"],correct:0}],
+        mistakes:["Forgetting return","Shadowing variables"]
+      },
+      "Conditional statements (if, else if, else)":{
+        concept:"Conditions let your code choose a path, like a road sign.",
+        steps:["if checks a boolean","else if checks the next option","else is the fallback"],
+        example:`const temp=30;
+if(temp>30){console.log('Hot')} else if(temp>20){console.log('Warm')} else{console.log('Cool')}`,
+        practice:["Ask for a test score and print A/B/C based on ranges"],
+        quiz:[{q:"else runs when…",a:["if is true","no previous condition was true","always"],correct:1}],
+        mistakes:["Using == instead of ===","Missing braces in multi-line blocks"]
+      },
+      "Array map method":{
+        concept:"map transforms each item and returns a new array.",
+        steps:["Call arr.map(fn)","fn gets (value, index)","Return the transformed value"],
+        example:`const nums=[1,2,3];
+const doubled=nums.map(n=>n*2);
+console.log(doubled); // [2,4,6]`,
+        practice:["Map names → uppercase"],
+        quiz:[{q:"map returns…",a:["nothing","the same array","a new array"],correct:2}],
+        mistakes:["Forgetting to return inside map"]
+      },
+      "Array filter method":{
+        concept:"filter keeps items that pass a test.",
+        steps:["Return true to keep, false to drop"],
+        example:`const nums=[1,2,3,4];
+console.log(nums.filter(n=>n%2===0)); // [2,4]`,
+        practice:["Filter words longer than 3"],
+        quiz:[{q:"filter callback should return?",a:["a number","true/false","a string"],correct:1}],
+        mistakes:["Returning the item instead of a boolean"]
+      },
+      "Array reduce method":{
+        concept:"reduce folds the array into one value (sum, product, object).",
+        steps:["arr.reduce((acc,cur)=>..., initial)","acc is the running result"],
+        example:`const sum=[1,2,3].reduce((a,b)=>a+b,0);
+console.log(sum); // 6`,
+        practice:["Multiply all numbers with reduce"],
+        quiz:[{q:"Second argument of reduce is…",a:["current","index","initial value"],correct:2}],
+        mistakes:["Forgetting the initial value on empty arrays"]
+      },
+      "Destructuring objects":{
+        concept:"Destructuring quickly pulls properties into variables.",
+        steps:["Use const {prop} = obj","Rename: {prop: alias}","Defaults: {prop = 0}"] ,
+        example:`const user={name:'Ada',age:14};
+const {name,age}=user;
+console.log(name,age);`,
+        practice:["Grab x and y from point={x:5,y:9}"]
+      },
+      "Closures basics":{
+        concept:"A closure remembers variables from where it was created, even later.",
+        steps:["Make a function inside another","Inner function uses outer variables","Return the inner function"],
+        example:`function makeCounter(){ let n=0; return ()=>++n }
+const c=makeCounter();
+console.log(c()); console.log(c()); // 1, 2`,
+        practice:["Build a click counter with closures"],
+        quiz:[{q:"Closure lets a function…",a:["run faster","remember surrounding variables","be a class"],correct:1}]
+      },
+      "this keyword in functions":{
+        concept:"this is the current context (who is speaking). It depends on how a function is called.",
+        steps:["Method call → this is the object","Loose function → undefined (strict)","Use bind/call/apply to control"],
+        example:`const user={name:'Mina', hi(){console.log('Hi from', this.name)}};
+user.hi(); // 'Mina'`,
+        practice:["Bind a function to always log a chosen name"]
+      },
+      "Promises basics":{
+        concept:"A Promise is a box for a value that arrives in the future.",
+        steps:["Create new Promise((resolve,reject)=>{…})","Use then/catch to react","Or await inside async functions"],
+        example:`const p=new Promise(r=>setTimeout(()=>r('Done!'),500));
+p.then(v=>console.log(v));`,
+        practice:["Wrap setTimeout in a Promise"],
+        quiz:[{q:"A promise has states…",a:["up/down","pending/fulfilled/rejected","open/close"],correct:1}]
+      },
+      "Async functions (async / await)":{
+        concept:"async/await lets you write asynchronous code that looks synchronous.",
+        steps:["Mark function as async","await pauses until promise settles","try/catch for errors"],
+        example:`async function load(){
+  try{ const res=await fetch('https://example.com');
+       console.log(res.ok); } catch(e){ console.error(e) }
+}`,
+        practice:["Fetch JSON from a public API and log a field"]
+      },
+      "Fetch API basics (fetch)":{
+        concept:"fetch makes HTTP requests from the browser.",
+        steps:["fetch(url) returns a Promise","await res.json() for JSON","Handle network errors"],
+        example:`async function getUser(){
+  const res = await fetch('https://jsonplaceholder.typicode.com/users/1');
+  const data = await res.json();
+  console.log(data.name);
+}`,
+        practice:["Load posts and render titles into a list"],
+        mistakes:["Forgetting await res.json()","Assuming fetch throws on HTTP 404 (it doesn't)"]
+      },
+      "Canvas API basics (<canvas>)":{
+        concept:"Canvas lets you draw pixels with code.",
+        steps:["Get 2D context","Draw shapes with fillRect, strokeRect","Use requestAnimationFrame for motion"],
+        example:`const c=document.createElement('canvas');
+c.width=300;c.height=150;document.body.appendChild(c);
+const ctx=c.getContext('2d');
+ctx.fillStyle='#4ade80'; ctx.fillRect(10,10,80,80);`,
+        practice:["Draw a traffic light with 3 circles"]
+      },
+      "Web Workers basics":{
+        concept:"Workers run JS in background threads so the UI stays smooth.",
+        steps:["Create new Worker('worker.js')","Use postMessage / onmessage","Terminate when done"],
+        example:`// main.js
+const w=new Worker('w.js');
+w.onmessage=e=>console.log(e.data);
+w.postMessage(1000000000);
+// w.js
+self.onmessage=e=>{ let sum=0; for(let i=0;i<e.data;i++) sum+=i; self.postMessage(sum) }`,
+        practice:["Move a heavy loop into a worker"]
+      },
+      "Service Workers basics":{
+        concept:"Service workers sit between your app and the network. They can cache files and work offline.",
+        steps:["Register navigator.serviceWorker.register","Install → cache assets","Fetch → serve from cache then network"],
+        example:`if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('/sw.js');
+}`,
+        practice:["Cache 'index.html' and 'style.css' in install event"]
+      },
+      "WebSockets basics":{
+        concept:"WebSockets are live two‑way connections.",
+        steps:["new WebSocket('wss://…')","ws.onopen / onmessage / send","Keep the connection alive"],
+        example:`const ws=new WebSocket('wss://echo.websocket.events');
+ws.onopen=()=>ws.send('hello');
+ws.onmessage=e=>console.log('echo',e.data);`,
+        practice:["Send your name and log the echo"]
+      }
+    };
+
+    // Fallback lesson template for all other topics
+    function templateFor(topic){
+      const level = Beginner.includes(topic)?'Beginner' : Intermediate.includes(topic)?'Intermediate' : 'Advanced';
+      const genericExample = `// Example related to: ${topic}
+console.log('Learning:', '${topic.replace(/`/g,'\`')}');`;
+      return {
+        concept: `In ${topic}, we learn a piece of JavaScript that helps you build bigger ideas.`,
+        steps: [
+          `Understand the idea with a simple definition (Level: ${level}).`,
+          `See it in a tiny snippet you can run in the console.`,
+          `Practice with 2 small tasks so your hands learn too.`
+        ],
+        example: genericExample,
+        practice: [
+          `Write a 1‑line console.log describing ${topic}.`,
+          `Change the code to print your name or a number related to ${topic}.`
+        ],
+        quiz: [
+          {q:`${topic}: pick the best description`, a:["A CSS feature","A JavaScript concept","A database"], correct:1}
+        ],
+        mistakes:["Skipping practice","Not reading errors — errors are friendly hints!"]
+      }
+    }
+
+    // Render a full tutorial page for a single topic
+    function buildLesson(topic){
+      const L = deep[topic] || templateFor(topic);
+      const steps = (L.steps||[]).map(s=>`<li>${s}</li>`).join('');
+      const practice = (L.practice||[]).map(t=>`<li>${t}</li>`).join('');
+      const quiz = (L.quiz||[]).map((q,i)=>{
+        const opts = q.a.map((opt,idx)=>`<label style="display:block;margin:4px 0"><input type="radio" name="q${i}" value="${idx}"> ${opt}</label>`).join('');
+        return `<div class="card"><p><b>Quiz:</b> ${q.q}</p>${opts}<button class="btn" onclick="checkQuiz(this, ${q.correct})">Check</button><span class="pill" style="margin-left:8px"></span></div>`
+      }).join('');
+      const mistakes = (L.mistakes||[]).map(m=>`<li>${m}</li>`).join('');
+
+      return `
+        <section class="card"><h3>Concept</h3><p>${L.concept}</p></section>
+        <section class="card"><h3>Step‑by‑step</h3><ol>${steps}</ol></section>
+        <section class="card"><h3>Example</h3><pre>${escapeHtml(L.example||'')}</pre><p><button class="btn" onclick="copyText(this.previousElementSibling.textContent)">Copy</button></p></section>
+        <section class="card"><h3>Practice</h3><ul class="tasks">${practice}</ul></section>
+        ${quiz}
+        ${mistakes?`<section class="card"><h3>Common mistakes</h3><ul>${mistakes}</ul></section>`:''}
+      `;
+    }
+
+    function escapeHtml(s){
+      return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ===== Quiz checker =====
+    window.checkQuiz = (btn, correct)=>{
+      const wrap = btn.parentElement; const pill = wrap.querySelector('.pill');
+      const chosen = [...wrap.querySelectorAll('input[type=radio]')].find(r=>r.checked);
+      if(!chosen){ pill.textContent='Pick an answer'; pill.className='pill warn'; return; }
+      if(+chosen.value===correct){ pill.textContent='Correct!'; pill.className='pill ok'; }
+      else { pill.textContent='Not quite — read the Concept again.'; pill.className='pill bad'; }
+    };
+
+    // ===== Navigation & progress =====
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const doneBtn = document.getElementById('markDone');
+    const progressPill = document.getElementById('progressPill');
+
+    let current = 0; // index in ALL
+    const done = new Set(JSON.parse(localStorage.getItem('js_tutorial_done')||'[]'));
+    updateProgress();
+
+    function openLesson(index){
+      current = index;
+      const topic = ALL[index];
+      lessonHeading.textContent = `${index+1}. ${topic}`;
+      lessonGrid.innerHTML = buildLesson(topic);
+      highlightSidebar(index);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+
+    function highlightSidebar(index){
+      [...topicList.children].forEach(li=>li.classList.remove('active'));
+      const target = [...topicList.children].find(li=>+li.dataset.index===index);
+      if(target){ target.classList.add('active'); target.scrollIntoView({block:'center'}); }
+    }
+
+    prevBtn.onclick = ()=> openLesson(Math.max(0, current-1));
+    nextBtn.onclick = ()=> openLesson(Math.min(ALL.length-1, current+1));
+
+    doneBtn.onclick = ()=>{
+      done.add(current); saveDone(); updateProgress();
+      alert('Marked as done ✔');
+    };
+
+    function saveDone(){ localStorage.setItem('js_tutorial_done', JSON.stringify([...done])); }
+    function updateProgress(){ progressPill.textContent = `Progress: ${done.size} / ${ALL.length}`; }
+
+    document.getElementById('startPath').onclick = ()=>{
+      // Start at first undone beginner, then intermediate, then advanced
+      const order = [Beginner, Intermediate, Advanced].flat().map(t=>ALL.indexOf(t));
+      const first = order.find(idx=>!done.has(idx)) ?? 0;
+      openLesson(first);
+    };
+
+    document.getElementById('printPdf').onclick = ()=> window.print();
+
+    document.getElementById('downloadHtml').onclick = ()=>{
+      const blob = new Blob([document.documentElement.outerHTML], {type:'text/html'});
+      const url = URL.createObjectURL(blob);
+      const a = Object.assign(document.createElement('a'), {href:url, download:'javascript_professor_full_tutorial.html'});
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    };
+
+    function copyText(text){ navigator.clipboard.writeText(text); }
+
+    // Initial render
+    renderList();
+    openLesson(0);
+  </script>
+</body>
+</html>
