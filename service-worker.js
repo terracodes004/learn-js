@@ -1,5 +1,5 @@
 const CACHE_NAME = 'learn-js-single-v1';
-const urlsToCache = ['index.html'];
+const urlsToCache = ['/index.html'];
 
 self.addEventListener('install', event => {
   event.waitUntil(
