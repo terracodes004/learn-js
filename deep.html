@@ -7,11 +7,373 @@
   <title>Modern JavaScript Mastery</title>
   <style>
     /* (Previous CSS remains unchanged) */
+    :root {
+  --bg: #0f1724;
+  --panel: #0c1424;
+  --card: #0b1220;
+  --ink: #e6eef8;
+  --muted: #9fb1c9;
+  --accent: #60a5fa;
+  --good: #34d399;
+  --warn: #fbbf24;
+  --bad: #fb7185;
+  --glass: rgba(255, 255, 255, 0.06)
+}
+
+* {
+  box-sizing: border-box
+}
+
+body {
+  font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Arial;
+  margin: 0;
+  background: linear-gradient(180deg, #071029 0%, #0b1220 100%);
+  color: var(--ink)
+}
+
+header {
+  padding: 28px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06)
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px
+}
+
+h1 {
+  font-size: 28px;
+  margin: 0 0 6px
+}
+
+p.lead {
+  color: var(--muted);
+  margin: 0
+}
+
+.toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px
+}
+
+.btn {
+  background: transparent;
+  border: 1px solid var(--glass);
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--accent);
+  cursor: pointer
+}
+
+.btn:hover {
+  background: var(--glass)
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 18px;
+  padding: 18px
+}
+
+aside {
+  background: var(--panel);
+  border: 1px solid var(--glass);
+  border-radius: 14px;
+  padding: 12px;
+  height: 78vh;
+  overflow: auto
+}
+
+main {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--glass);
+  border-radius: 14px;
+  padding: 18px;
+  height: 78vh;
+  overflow: auto
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border: 1px solid var(--glass);
+  border-radius: 999px;
+  color: var(--muted);
+  cursor: pointer
+}
+
+.chip.active {
+  color: var(--ink);
+  background: rgba(96, 165, 250, 0.12);
+  border-color: rgba(96, 165, 250, 0.35)
+}
+
+.search {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--glass);
+  background: transparent;
+  color: inherit;
+  margin-bottom: 10px
+}
+
+.chapters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0
+}
+
+.list li {
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--muted)
+}
+
+.list li:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink)
+}
+
+.list li.active {
+  background: rgba(96, 165, 250, 0.12);
+  color: var(--ink)
+}
+
+.lesson h2 {
+  margin: 0
+}
+
+.prof {
+  font-style: italic;
+  color: #c7e0ff;
+  margin-top: 4px
+}
+
+.pill {
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid var(--glass);
+  border-radius: 999px;
+  color: var(--muted)
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--glass);
+  border-radius: 14px;
+  padding: 12px
+}
+
+pre,
+code {
+  font-family: ui-monospace, SFMono-Regular, Consolas, Monaco, monospace
+}
+
+pre {
+  margin: 0;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 12px;
+  border-radius: 10px;
+  overflow: auto
+}
+
+.tasks li {
+  margin: 6px 0
+}
+
+.ok {
+  color: var(--good)
+}
+
+.warn {
+  color: var(--warn)
+}
+
+.bad {
+  color: var(--bad)
+}
+
+.nav {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between
+}
+
+.nav .btn {
+  flex: 1
+}
+
+footer {
+  padding: 16px;
+  color: var(--muted);
+  text-align: center
+}
+
+/* Print/PDF */
+@media print {
+  body {
+    background: white;
+    color: black
+  }
+
+  header,
+  aside,
+  .toolbar {
+    display: none
+  }
+
+  main {
+    height: auto
+  }
+
+  .card {
+    page-break-inside: avoid
+  }
+}
+
+/* === Responsive Adjustments === */
+
+/* On tablets and smaller (<= 1024px) — adjust layout proportions */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 280px 1fr;
+    gap: 12px;
+  }
+
+  aside {
+    height: 70vh;
+  }
+
+  main {
+    height: 70vh;
+  }
+}
+
+/* On phones and small screens (<= 767px) — stack sidebar and content vertically */
+@media (max-width: 767px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+  }
+
+  aside {
+    width: 100%;
+    height: auto;
+    margin-bottom: 12px;
+    max-height: 40vh;
+  }
+
+  main {
+    width: 100%;
+    height: auto;
+    max-height: 60vh;
+  }
+
+  header,
+  .toolbar {
+    padding: 20px 12px;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+}
+
+/* On very narrow phones (<= 480px) — make buttons and text more tap-friendly */
+@media (max-width: 480px) {
+  .btn {
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  .search {
+    padding: 8px;
+    font-size: 0.9rem;
+  }
+
+  .pill {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  }
   </style>
 </head>
 <body>
   <!-- (Previous HTML structure remains unchanged) -->
-
+<header>
+‎    <div class="container">
+‎      <h1>JavaScript Mastery for Young Minds — Full Tutorial</h1>
+‎      <p class="lead">A professor’s 75 years of wisdom, explained kindly for a 13‑year‑old. Follow the guided path or jump to any topic.</p>
+‎      <div class="toolbar">
+‎        <button class="btn" id="startPath">▶ Start Guided Path</button>
+‎        <button class="btn" id="printPdf">🖨️ Print / Save as PDF</button>
+‎        <button class="btn" id="downloadHtml">⬇️ Download .html</button>
+‎        <span class="pill" id="progressPill">Progress: 0 / 250</span>
+‎      </div>
+‎    </div>
+‎  </header>
+‎
+‎  <div class="container layout">
+‎    <aside>
+‎      <input id="search" class="search" placeholder="Search topics (press Enter)…" />
+‎      <div class="chapters">
+‎        <span class="chip active" data-chapter="Beginner">Beginner</span>
+‎        <span class="chip" data-chapter="Intermediate">Intermediate</span>
+‎        <span class="chip" data-chapter="Advanced">Advanced</span>
+‎      </div>
+‎      <ol id="topicList" class="list"></ol>
+‎    </aside>
+‎
+‎    <main>
+‎      <article class="lesson">
+‎        <h2 id="lessonHeading">Welcome, young learner</h2>
+‎        <div class="prof">Professor — patient, curious, and practical.</div>
+‎        <div class="grid" id="lessonGrid">
+‎          <section class="card">
+‎            <h3>How this tutorial works</h3>
+‎            <p>Each lesson has five parts: <b>Concept</b> → <b>Step‑by‑step</b> → <b>Example</b> → <b>Practice</b> → <b>Quick quiz</b>. Finish a lesson and mark it as done to track progress.</p>
+‎            <ul>
+‎              <li>Use the left panel to filter by <b>Beginner / Intermediate / Advanced</b>.</li>
+‎              <li>Click <b>Start Guided Path</b> to follow a smart order with milestone mini‑projects.</li>
+‎              <li>Click <b>Print / Save as PDF</b> to get a printable version.</li>
+‎            </ul>
+‎          </section>
+‎        </div>
+‎        <div class="nav">
+‎          <button class="btn" id="prev">⬅️ Previous</button>
+‎          <button class="btn" id="markDone">✅ Mark as Done</button>
+‎          <button class="btn" id="next">Next ➡️</button>
+‎        </div>
+‎      </article>
+‎    </main>
+‎  </div>
+‎
+‎  <footer>
+‎    <small>This is a self‑contained tutorial. No frameworks. You can study offline — just save the page.</small>
+‎  </footer>
+‎
   <script>
     // ===== Revised Data: Properly organized topics =====
     const Beginner = [
