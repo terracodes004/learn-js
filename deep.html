@@ -748,6 +748,222 @@ function example() {
     // But ensure all functions are properly scoped and modernized
 
     // Initialize the app
+    // ===== DOM Elements and App State =====
+const topicList = document.getElementById('topicList');
+const chips = document.querySelectorAll('.chip');
+const search = document.getElementById('search');
+const lessonHeading = document.getElementById('lessonHeading');
+const lessonGrid = document.getElementById('lessonGrid');
+const prevBtn = document.getElementById('prev');
+const nextBtn = document.getElementById('next');
+const doneBtn = document.getElementById('markDone');
+const progressPill = document.getElementById('progressPill');
+const startPathBtn = document.getElementById('startPath');
+const printPdfBtn = document.getElementById('printPdf');
+const downloadHtmlBtn = document.getElementById('downloadHtml');
+
+let activeChapter = 'Beginner';
+let currentLessonIndex = 0;
+const completedLessons = new Set(JSON.parse(localStorage.getItem('js_tutorial_done') || '[]');
+
+// ===== Core Functions =====
+function renderList() {
+  topicList.innerHTML = '';
+  const topics = activeChapter === 'Beginner' ? Beginner :
+                 activeChapter === 'Intermediate' ? Intermediate : Advanced;
+
+  topics.forEach(topic => {
+    const li = document.createElement('li');
+    const globalIndex = ALL.indexOf(topic);
+    li.textContent = `${globalIndex + 1}. ${topic}`;
+    li.dataset.index = globalIndex;
+    
+    if (completedLessons.has(globalIndex)) {
+      li.classList.add('active');
+    }
+    
+    li.addEventListener('click', () => openLesson(globalIndex));
+    topicList.appendChild(li);
+  });
+}
+
+function openLesson(index) {
+  currentLessonIndex = index;
+  const topic = ALL[index];
+  lessonHeading.textContent = `${index + 1}. ${topic}`;
+  lessonGrid.innerHTML = buildLesson(topic);
+  highlightSidebar(index);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function buildLesson(topic) {
+  const lesson = deep[topic] || templateFor(topic);
+  const stepsHTML = lesson.steps?.map(step => `<li>${step}</li>`).join('') || '';
+  const practiceHTML = lesson.practice?.map(task => `<li>${task}</li>`).join('') || '';
+  
+  const quizHTML = lesson.quiz?.map((q, i) => `
+    <div class="card">
+      <p><b>Quiz:</b> ${q.q}</p>
+      ${q.a.map((opt, idx) => `
+        <label style="display:block;margin:4px 0">
+          <input type="radio" name="q${i}" value="${idx}"> ${opt}
+        </label>
+      `).join('')}
+      <button class="btn" onclick="checkQuiz(this, ${q.correct})">Check</button>
+      <span class="pill" style="margin-left:8px"></span>
+    </div>
+  `).join('') || '';
+  
+  const mistakesHTML = lesson.mistakes?.length ? `
+    <section class="card">
+      <h3>Common mistakes</h3>
+      <ul>${lesson.mistakes.map(m => `<li>${m}</li>`).join('')}</ul>
+    </section>
+  ` : '';
+
+  return `
+    <section class="card">
+      <h3>Concept</h3>
+      <p>${lesson.concept}</p>
+    </section>
+    <section class="card">
+      <h3>Step-by-step</h3>
+      <ol>${stepsHTML}</ol>
+    </section>
+    <section class="card">
+      <h3>Example</h3>
+      <pre>${escapeHtml(lesson.example || '')}</pre>
+      <p><button class="btn" onclick="copyText(this.previousElementSibling.textContent)">Copy</button></p>
+    </section>
+    <section class="card">
+      <h3>Practice</h3>
+      <ul class="tasks">${practiceHTML}</ul>
+    </section>
+    ${quizHTML}
+    ${mistakesHTML}
+  `;
+}
+
+function highlightSidebar(index) {
+  document.querySelectorAll('#topicList li').forEach(li => {
+    li.classList.remove('active');
+  });
+  
+  const targetLi = [...document.querySelectorAll('#topicList li')].find(
+    li => parseInt(li.dataset.index) === index
+  );
+  
+  if (targetLi) {
+    targetLi.classList.add('active');
+    targetLi.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+}
+
+function updateProgress() {
+  progressPill.textContent = `Progress: ${completedLessons.size} / ${ALL.length}`;
+  localStorage.setItem('js_tutorial_done', JSON.stringify([...completedLessons]));
+}
+
+// ===== Event Handlers =====
+function handleChipClick(e) {
+  chips.forEach(c => c.classList.remove('active'));
+  e.target.classList.add('active');
+  activeChapter = e.target.dataset.chapter;
+  renderList();
+}
+
+function handleSearch(e) {
+  if (e.key === 'Enter') {
+    const query = search.value.trim().toLowerCase();
+    if (!query) return;
+    
+    const idx = ALL.findIndex(t => t.toLowerCase().includes(query));
+    if (idx >= 0) {
+      openLesson(idx);
+      const li = [...topicList.children].find(li => +li.dataset.index === idx);
+      li?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      alert('No topic matched that search.');
+    }
+  }
+}
+
+function startGuidedPath() {
+  const order = [...Beginner, ...Intermediate, ...Advanced].map(t => ALL.indexOf(t));
+  const first = order.find(idx => !completedLessons.has(idx)) ?? 0;
+  openLesson(first);
+}
+
+// ===== Initialize App =====
+function init() {
+  // Set up event listeners
+  chips.forEach(chip => chip.addEventListener('click', handleChipClick));
+  search.addEventListener('keypress', handleSearch);
+  prevBtn.addEventListener('click', () => openLesson(Math.max(0, currentLessonIndex - 1)));
+  nextBtn.addEventListener('click', () => openLesson(Math.min(ALL.length - 1, currentLessonIndex + 1)));
+  doneBtn.addEventListener('click', () => {
+    completedLessons.add(currentLessonIndex);
+    updateProgress();
+    alert('Marked as done ✔');
+  });
+  startPathBtn.addEventListener('click', startGuidedPath);
+  printPdfBtn.addEventListener('click', () => window.print());
+  downloadHtmlBtn.addEventListener('click', () => {
+    const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'modern_javascript_tutorial.html';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  // Initial render
+  renderList();
+  openLesson(0);
+  updateProgress();
+}
+
+// ===== Utility Functions (needed in global scope) =====
+window.checkQuiz = function(button, correctIndex) {
+  const quizCard = button.parentElement;
+  const feedbackPill = quizCard.querySelector('.pill');
+  const selectedOption = quizCard.querySelector('input[type="radio"]:checked');
+  
+  if (!selectedOption) {
+    feedbackPill.textContent = 'Please select an answer';
+    feedbackPill.className = 'pill warn';
+    return;
+  }
+  
+  if (+selectedOption.value === correctIndex) {
+    feedbackPill.textContent = 'Correct!';
+    feedbackPill.className = 'pill ok';
+  } else {
+    feedbackPill.textContent = 'Try again!';
+    feedbackPill.className = 'pill bad';
+  }
+};
+
+window.copyText = function(text) {
+  navigator.clipboard.writeText(text)
+    .then(() => alert('Copied to clipboard!'))
+    .catch(err => console.error('Failed to copy:', err));
+};
+
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Start the app
+document.addEventListener('DOMContentLoaded', init);
     document.addEventListener('DOMContentLoaded', () => {
       renderList();
       openLesson(0);
